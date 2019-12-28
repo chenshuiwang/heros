@@ -1,0 +1,135 @@
+<%- include('./layout/header.ejs')%>
+  <div class="container hero-list">
+    <a class="btn btn-success pull-right" href="/add">添加英雄</a>
+    <table class="table table-hover">
+      <thead>
+        <th>编号</th>
+        <th>名称</th>
+        <th>性别</th>
+        <th>年龄</th>
+        <th>地址</th>
+        <th>创建时间</th>
+        <th>操作</th>
+      </thead>
+      <tbody>
+        <!-- <tr>
+          <td>1</td>
+          <td>墨子</td>
+          <td>男</td>
+          <td>2017-12-12 12:12:12</td>
+          <td>
+            <a href="">查看</a>
+            <a href="">编辑</a>
+            <a href="">删除</a>
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>李白</td>
+          <td>男</td>
+          <td>2017-12-12 12:12:12</td>
+          <td>
+            <a href="">查看</a>
+            <a href="">编辑</a>
+            <a href="">删除</a>
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>诸葛亮</td>
+          <td>男</td>
+            <td>2017-12-12 12:12:12</td>
+            <td>
+              <a href="">查看</a>
+              <a href="">编辑</a>
+              <a href="">删除</a>
+            </td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>大乔</td>
+          <td>女</td>
+          <td>2017-12-12 12:12:12</td>
+          <td>
+            <a href="">查看</a>
+            <a href="">编辑</a>
+            <a href="">删除</a>
+          </td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>后羿</td>
+          <td>男</td>
+          <td>2017-12-12 12:12:12</td>
+          <td>
+            <a href="">查看</a>
+            <a href="">编辑</a>
+            <a href="">删除</a>
+          </td>
+        </tr> -->
+        <!-- <% data.forEach((item,index)=>{%>
+          <tr>
+            <td><%= index+1%></td>
+            <td><%= item.name%></td>
+            <td><%= item.gender%></td>
+            <td><%= item.age%></td>
+            <td><%= item.address%></td>
+            <td><%= item.ctime%></td>
+            <td>
+              <a href="./info?id=<%=item.id%>">查看</a>
+              <a href="./edit?id=<%=item.id%>">编辑</a>
+              <a href="javascipt:void(0)">删除</a>
+            </td>
+          </tr>
+        <%})%> -->
+      </tbody>
+    </table>
+  </div>
+  <%- include('./layout/footer.ejs')%>
+  <script src="../node_modules/art-template/lib/template-web.js"></script>
+  <script type="text/html" id="fd">
+    {{each data}}
+      <tr>
+        <td>{{$index +1}}</td>
+        <td>{{$value.name}}</td>
+        <td>{{$value.gender}}</td>
+        <td>{{$value.age}}</td>
+        <td>{{$value.address}}</td>
+        <td>2017-12-12 12:12:12</td>
+        <td>
+          <a href="./info?id={{$value.id}}">查看</a>
+          <a href="./edit?id={{$value.id}}">编辑</a>
+          <a href="javascipt:void(0)" data-id='{{$value.id}}' class="del">删除</a>
+        </td>
+      </tr>
+    {{/each}}
+  </script>
+  <script>
+    function reload(){
+      $.get({
+        url:'getHeroData',
+        success:function(res){
+          //console.log(res)
+          if(res.code == 200){
+            let html = template('fd',res);
+            $('tbody').html(html)
+          }
+        }
+      })
+    }
+    reload();
+    $('tbody').on('click','.del',function(){
+      $.get({
+        url:'/deleteHero',
+        data:{
+          id:$(this).data('id')
+        },
+        success:function(res){
+          if(res.code == 200){
+            reload();
+          }
+        }
+      })
+      // console.log($(this).data('id'))
+    })
+  </script>
